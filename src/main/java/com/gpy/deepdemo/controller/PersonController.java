@@ -38,7 +38,7 @@ public class PersonController {
     @RequestMapping(value = "/getpersonbyid/{personId}",method = RequestMethod.GET)
     @ApiOperation(value = "根据ID获取人员信息", notes = "根据ID获取人员信息", tags = "Person")
     @ApiImplicitParams({
-            @ApiImplicitParam(name="personId",value = "人员Id", required = true, dataType = "Integer")
+            @ApiImplicitParam(name="personId",value = "人员Id", paramType = "path",required = true, dataType = "Integer")
     })
     public Person getPersonById(@PathVariable("personId") Integer personId){
         Person person = personService.getById(personId);
