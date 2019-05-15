@@ -2,10 +2,13 @@ package com.gpy.deepdemo.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
 
 /**
  * <p>
@@ -16,9 +19,11 @@ import lombok.experimental.Accessors;
  * @since 2019-01-17
  */
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-public class Person implements Serializable {
+public class Person implements Serializable, Comparable<Person> {
 
     private static final long serialVersionUID = 1L;
 
@@ -54,4 +59,10 @@ public class Person implements Serializable {
     private Integer teamId;
 
 
+    @Override
+    public int compareTo(Person o) {
+        return this.age - o.getAge();
+    }
+
 }
+
