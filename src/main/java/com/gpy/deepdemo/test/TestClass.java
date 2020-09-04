@@ -2,8 +2,17 @@ package com.gpy.deepdemo.test;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
+import com.gpy.deepdemo.entity.Aaa;
+import com.gpy.deepdemo.entity.Bbb;
 import com.gpy.deepdemo.entity.Person;
+import lombok.Data;
+import org.springframework.beans.BeanUtils;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -130,7 +139,7 @@ public class TestClass {
         System.out.println("after remove:list.size()=" + list.size());
     }
 
-    public static void main(String[] args) {
+    public static void mainn(String[] args) {
 
         List<Person> persons = new ArrayList<>();
         persons.add(new Person(1,"skds",23,1,"42345",2));
@@ -147,5 +156,77 @@ public class TestClass {
         }
 
     }
+
+    public static void main222(String[] args) {
+        Aaa aaa = new Aaa();
+        aaa.setAge("13")
+                .setId(1)
+                .setSex(false);
+        Bbb bbb = new Bbb();
+        BeanUtils.copyProperties(aaa, bbb);
+        System.out.println(bbb);
+    }
+
+    public static void main34(String[] args) {
+        String jsonStr = "{\"interface\":{\"globalInfo\":{\"interfaceCode\":\"DFXJ1001\",\"responseCode\":\"1\",\"appId\":\"0\",\"requestTime\":\"2019-05-21 19:00:52:178\",\"requestCode\":\"DZFPQZ\",\"interfaceId\":\"\",\"dataExchangeId\":\"DZFPQZDFXJ10012019-05-21799847156\"},\"returnStateInfo\":{\"returnCode\":\"0000\",\"returnMessage\":\"成功\"},\"Data\":{\"dataDescription\":{\"zipCode\":\"0\"},\"content\":\"eyJGUFFRTFNIIjoiVEVTVDIwMTkwNTIxMTkwMDUyMDEiLCJGUF9ETSI6IjE1MjAwMDE4NjM1NyIsIkZQX0hNIjoiMzAzNzM1NDYiLCJLUFJRIjoiMjAxOTA1MjExOTAyMDIiLCJKWU0iOiIwNjMzNzM1NTE0NTgxOTY3NDMyMiIsIlBERl9VUkwiOiJodHRwOi8vZGV2LmZhcGlhby5jb206MTkwODAvZHpmcC13ZWIvcGRmL2Rvd25sb2FkP3JlcXVlc3Q9ZTV1aGY4V0VUSU9NZ2FhMmNDVU10bEphS1FPNmpUSnFUNTdLLlpOY0haQ29IQ2Z5WFRZc1dWOFVZVDNacDdPaUFRZVg2SjFicWhPLklyMTdicDA4NWdfXyU1RWJCZ2lFaUZiR2MiLCJTUF9VUkwiOiJodHRwczovL3Rlc3R3eC5mYXBpYW8uY29tL2ZwdC13ZWNoYXQvd3hhZGRjYXJkLmRvP2NvZGU9U1FsVXhycE1LSmZHNGYya2RQcyUyRnB5eVRYVmZSMko2SXk1MFladWE3N2pDaU9QR1pIbWdyM21HYkE5c3RkMEtuajNHTmlsazA2R0JJJTBBZ01TZHpvNE5CQSUzRCUzRCJ9\"}}}";
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode jsonNode = objectMapper.readTree(jsonStr);
+            JsonNode anInterface = jsonNode.get("interface");
+            JsonNode returnStateInfo = anInterface.get("returnStateInfo");
+            JsonNode data = anInterface.get("Data");
+            int returnCode = returnStateInfo.get("returnCode").asInt();
+            System.out.println(returnCode);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void main11(String[] args) {
+
+        String s = "[{\"name\":\"aaa\",\"count\":11},{\"name\":\"bbb\",\"count\":12},{\"name\":\"bbb\",\"count\":13},{\"name\":\"ccc\",\"count\":14},{\"name\":\"bbb\",\"count\":15},{\"name\":\"aaa\",\"count\":16}]";
+
+        JSONArray jsonArray = JSONArray.parseArray(s);
+        List<Map> maps = jsonArray.toJavaList(Map.class);
+        Map<String, List> result = new HashMap<>();
+
+        for (Map map : maps) {
+            System.out.println("name------>" + map.get("name"));
+            System.out.println("count----->" + map.get("count"));
+            if (!result.containsKey(map.get("name"))){
+                List<Object> list = Lists.newArrayList();
+                list.add(map.get("count"));
+                result.put(String.valueOf(map.get("name")), list);
+            } else {
+                List old = result.get(map.get("name"));
+                old.add(map.get("count"));
+                result.put(String.valueOf(map.get("name")), old);
+            }
+        }
+        System.out.println(result);
+
+    }
+
+    public static void main(String[] args) {
+        String str = "[{\"1\":\"1\",\"2\":\"2\"},{\"3\":\"3\",\"4\":\"4\"},{\"5\":\"5\",\"6\":\"6\"}]";
+        JSONArray objects = JSONObject.parseArray(str);
+        System.out.println(objects.get(0));
+
+        Js js = new Js();
+        js.setICON(String.valueOf(objects.get(0)));
+        js.setIDS(String.valueOf(objects.get(1)));
+        js.setUS(String.valueOf(objects.get(2)));
+        System.out.println(JSON.toJSONString(js));
+
+    }
+
+    @Data
+    public static class Js{
+        private String ICON;
+        private String IDS;
+        private String US;
+    }
+
+
 }
 
